@@ -43,7 +43,7 @@ const fetchPRs = async () => {
 };
 
 const main = async () => {
-  const reportTemplate = `# Daily Report
+  const reportTemplate = `# Daily Report - {{date}}
 
 ## Issues
 
@@ -56,10 +56,12 @@ const main = async () => {
 
   const issuesContent = await fetchIssues();
   const prsContent = await fetchPRs();
+  const today = new Date().toISOString().split("T")[0];
 
   const reportContent = reportTemplate
     .replace(/{{issues}}/g, issuesContent)
-    .replace(/{{prs}}/g, prsContent);
+    .replace(/{{prs}}/g, prsContent)
+    .replace(/{{date}}/g, today);
 
   const reportsDir = "./reports";
 
@@ -67,7 +69,6 @@ const main = async () => {
     fs.mkdirSync(reportsDir);
   }
 
-  const today = new Date().toISOString().split("T")[0];
   fs.writeFileSync(`${reportsDir}/${today}.md`, reportContent);
 };
 
