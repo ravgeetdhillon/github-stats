@@ -6,6 +6,9 @@ jobs:
       - image: cimg/node:14.19.0
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "f9:20:09:79:54:60:f5:48:e5:b7:d7:61:37:57:b1:06"
       - run:
           name: Update NPM
           command: "sudo npm install -g npm"
@@ -25,6 +28,17 @@ jobs:
           key: reports-public-cache-{{ .Branch }}
           paths:
             - ./reports
+      - run:
+          name: Commit to GitHub Repo
+          command: |
+            git config user.name "CircleCI Job"
+            git config user.email noreply@github.com
+            git checkout master
+            if [ $(git status reports --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
+              git add .
+              git commit -m "chore: weekly report from CircleCI [skip ci]"
+              git push origin master --force
+            fi
 
 workflows:
   version: 2
