@@ -37,7 +37,6 @@ const fetchPRs = async () => {
 
   issuesAndPullRequests.data.items.forEach((item) => {
     prsContent += `${item.title} - ${item.html_url}\n\n`;
-    console.log(item.html_url);
   });
 
   return prsContent;
@@ -62,8 +61,14 @@ const main = async () => {
     .replace(/{{issues}}/g, issuesContent)
     .replace(/{{prs}}/g, prsContent);
 
+  const reportsDir = "./reports";
+
+  if (!fs.existsSync(reportsDir)) {
+    fs.mkdirSync(reportsDir);
+  }
+
   const today = new Date().toISOString().split("T")[0];
-  fs.writeFileSync(`./reports/${today}.md`, reportContent);
+  fs.writeFileSync(`${reportsDir}/${today}.md`, reportContent);
 };
 
 main();
