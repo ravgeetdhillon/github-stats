@@ -43,7 +43,7 @@ const fetchPRs = async () => {
 };
 
 const main = async () => {
-  const reportTemplate = `# Daily Report - {{date}}
+  const reportTemplate = `# Weekly Report - {{date}}
 
 ## Issues
 
